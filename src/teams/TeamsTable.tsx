@@ -4,14 +4,7 @@ import {
   loadTeamsRequest,
   updateTeamRequest,
 } from "./middleware";
-
-type Team = {
-  id: string;
-  promotion: string;
-  members: string;
-  name: string;
-  url: string;
-};
+import { Team } from "./models";
 
 type RowProps = {
   team: Team;
@@ -67,7 +60,7 @@ type EditRowProps = {
   team: Team;
 };
 type EditRowActions = {
-  //name: "promotion" | "members"
+  // name: "promotion" | "members"
   inputChange(name: keyof Team, value: string): void;
 };
 
@@ -162,7 +155,7 @@ export function TeamsTable(props: Props & Actions) {
         e.preventDefault();
         props.save();
       }}
-      onReset={(e) => {
+      onReset={() => {
         props.reset();
       }}
     >
@@ -343,7 +336,7 @@ export class TeamsTableWrapper extends React.Component<WrapperProps, State> {
           });
         }}
         save={async () => {
-          console.warn("save %o", this.state.team);
+          console.warn("save", this.state.team);
           this.setState({ loading: true });
           const { success } = await updateTeamRequest(this.state.team);
           if (success) {
@@ -351,7 +344,9 @@ export class TeamsTableWrapper extends React.Component<WrapperProps, State> {
             this.setState({ team: getEmptyTeam() });
           }
         }}
-        reset={() => this.setState({ team: getEmptyTeam() })}
+        reset={() => {
+          this.setState({ team: getEmptyTeam() });
+        }}
       />
     );
   }
