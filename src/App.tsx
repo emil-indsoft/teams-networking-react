@@ -41,8 +41,38 @@ function AppHeader() {
   );
 }
 
+function ContentWrapper() {
+  return <div id="main">To DO table</div>;
+}
+
+function AppFooter() {
+  return (
+    <footer>
+      <a className="item" href="https://github.com/nmatei/teams-networking">
+        <span>👩‍💻</span>
+        <span>Source code</span>
+      </a>
+      <span className="item">|</span>
+      <a
+        className="item"
+        href="https://github.com/nmatei/node-api"
+        target="blank"
+      >
+        <span>📃</span>
+        <span>Api Docs</span>
+      </a>
+    </footer>
+  );
+}
+
 function App() {
-  return <AppHeader />;
+  return (
+    <>
+      <AppHeader />
+      <ContentWrapper />
+      <AppFooter />
+    </>
+  );
 }
 
 export default App;
