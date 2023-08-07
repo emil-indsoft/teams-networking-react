@@ -1,4 +1,3 @@
-import { type } from "os";
 import React from "react";
 import { deleteTeamRequest, loadTeamsRequest } from "./middleware";
 
@@ -13,15 +12,14 @@ type Team = {
 type RowProps = {
   team: Team;
 };
-
 type RowActions = {
   deleteTeam(id: string): void;
+  startEdit(team: Team): void;
 };
+
 function TeamRow(props: RowProps & RowActions) {
   const { id, promotion, members, name, url } = props.team;
-  const displayUrl = url.startsWith("https://github.com/")
-    ? url.substring(19)
-    : url;
+  const displayUrl = url.startsWith("https://github.com/") ? url.substring(19) : url;
   return (
     <tr>
       <td style={{ textAlign: "center" }}>
@@ -36,7 +34,13 @@ function TeamRow(props: RowProps & RowActions) {
         </a>
       </td>
       <td>
-        <button type="button" className="action-btn edit-btn">
+        <button
+          type="button"
+          className="action-btn edit-btn"
+          onClick={() => {
+            props.startEdit(props.team);
+          }}
+        >
           &#9998;
         </button>
         <button
@@ -57,20 +61,24 @@ type Props = {
   loading: boolean;
   teams: Team[];
 };
-
 type Actions = {
   deleteTeam(id: string): void;
+  startEdit(team: Team): void;
+  save(): void;
 };
 
 export function TeamsTable(props: Props & Actions) {
   return (
     <form
-      id="teamsForm"
       action=""
       method="get"
       className={props.loading ? "loading-mask" : ""}
+      onSubmit={e => {
+        e.preventDefault();
+        props.save();
+      }}
     >
-      <table id="teamsTable">
+      <table className="table-view">
         <colgroup>
           <col className="select-all-column" />
           <col style={{ width: "20%" }} />
@@ -92,13 +100,14 @@ export function TeamsTable(props: Props & Actions) {
           </tr>
         </thead>
         <tbody>
-          {props.teams.map((team) => (
+          {props.teams.map(team => (
             <TeamRow
               key={team.id}
               team={team}
               deleteTeam={function (id) {
                 props.deleteTeam(id);
               }}
+              startEdit={props.startEdit}
             />
           ))}
         </tbody>
@@ -106,28 +115,13 @@ export function TeamsTable(props: Props & Actions) {
           <tr>
             <td></td>
             <td>
-              <input
-                type="text"
-                name="promotion"
-                placeholder="Enter promotion"
-                required
-              />
+              <input type="text" name="promotion" placeholder="Enter promotion" required />
             </td>
             <td>
-              <input
-                type="text"
-                name="members"
-                placeholder="Enter members"
-                required
-              />
+              <input type="text" name="members" placeholder="Enter members" required />
             </td>
             <td>
-              <input
-                type="text"
-                name="name"
-                placeholder="Enter name"
-                required
-              />
+              <input type="text" name="name" placeholder="Enter name" required />
             </td>
             <td>
               <input type="text" name="url" placeholder="Enter url" required />
@@ -158,7 +152,7 @@ export class TeamsTableWrapper extends React.Component<WrapperProps, State> {
     super(props);
     this.state = {
       loading: true,
-      teams: [],
+      teams: []
     };
   }
 
@@ -167,11 +161,11 @@ export class TeamsTableWrapper extends React.Component<WrapperProps, State> {
   }
 
   loadTeams() {
-    loadTeamsRequest().then((teams) => {
+    loadTeamsRequest().then(teams => {
       console.info("loaded", teams);
       this.setState({
         loading: false,
-        teams,
+        teams
       });
     });
   }
@@ -182,12 +176,18 @@ export class TeamsTableWrapper extends React.Component<WrapperProps, State> {
       <TeamsTable
         loading={this.state.loading}
         teams={this.state.teams}
-        deleteTeam={async (id) => {
+        deleteTeam={async id => {
           this.setState({ loading: true });
           const status = await deleteTeamRequest(id);
           if (status.success) {
             this.loadTeams();
           }
+        }}
+        startEdit={team => {
+          console.info("start edit", team);
+        }}
+        save={() => {
+          console.warn("save");
         }}
       />
     );
