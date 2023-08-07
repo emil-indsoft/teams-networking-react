@@ -1,8 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+//import logo from "./logo.svg";
+import logo from "./images/network-team-icon.png";
+import "./App.css";
+import "./style.css";
 
-function App() {
+function App_old() {
   return (
     <div className="App">
       <header className="App-header">
@@ -21,6 +23,26 @@ function App() {
       </header>
     </div>
   );
+}
+
+function AppHeader() {
+  return (
+    <header>
+      <div id="header-wrapper">
+        <div id="my-picture">
+          <img src={logo} alt="TeamNetworking" width="100" />
+        </div>
+        <div id="header-info">
+          <h1>Team Networking</h1>
+          <h2>CRUD operations example (Create, Read, Update, Delete)</h2>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function App() {
+  return <AppHeader />;
 }
 
 export default App;
