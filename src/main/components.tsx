@@ -16,7 +16,7 @@ export function ContentWrapper() {
           name="search"
           id="searchTeams"
           placeholder="Search..."
-          onChange={e => {
+          onChange={(e) => {
             console.info("search", e.target.value);
             // search = e.target.value;
             setSearch(e.target.value);
